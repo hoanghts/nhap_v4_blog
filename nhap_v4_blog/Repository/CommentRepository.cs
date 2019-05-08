@@ -27,39 +27,45 @@ namespace nhap_v4_blog.Repository
             _db.SaveChanges();
         }
 
-        public List<CommentDto> GetAll()
+        public void DeleteAllChildComment(int commentid)
         {
-            return (from b in _db.Comments
-                    select new CommentDto
+            var re = (from cm in _db.Comments
+                      where cm.BaseId == commentid
+                      select cm).ToList();
+            if (re.Count > 0)
+            {
+                foreach (var item in re)
+                {
+                    int countBuf = 0;
+                    List<Comment> listBuf = new List<Comment>() { item };
+                    while (countBuf < listBuf.Count)
                     {
-                        Id = b.Id,
-                        BaseId = b.BaseId,
-                        Content = b.Content,
-                        PostId = b.PostId,
-                        DateCreated = b.DateCreated
-                    }).ToList();
+                        Comment cmBuf = listBuf[countBuf];
+                        var reBuf = (from cm in _db.Comments
+                                     where cm.BaseId == cmBuf.Id
+                                     select cm).ToList();
+                        
+                        listBuf.AddRange(reBuf);
+                        _db.Comments.Remove(cmBuf);
+                        countBuf++;
+                    }
+                }
+                var comment = _db.Comments.Find(commentid);
+                _db.Comments.Remove(comment);
+                _db.SaveChanges();
+            }
+            
         }
-
-        public List<Comment> GetAllCommentByBaseId(int baseid)
+        public List<CommentFullDto> GetAllCommentByBaseId(int baseid)
         {
-            List<Comment> re = new List<Comment>();
-            layHetComment(baseid, ref re);
+            List<CommentFullDto> re = new List<CommentFullDto>();
+            GetAllChildComment(baseid, ref re);
             return re;
-            //return GetAllCommentById(baseid);
         }
 
-        public CommentDto GetById(int id)
+        public CommentFullDto GetById(int id)
         {
-            return (from b in _db.Comments
-                    where b.Id == id
-                    select new CommentDto
-                    {
-                        Id = b.Id,
-                        BaseId = b.BaseId,
-                        Content = b.Content,
-                        PostId = b.PostId,
-                        DateCreated = b.DateCreated
-                    }).FirstOrDefault();
+            return  CreateDTO(_db.Comments.Find(id));
         }
 
 
@@ -73,71 +79,98 @@ namespace nhap_v4_blog.Repository
             _db.SaveChanges();
         }
         //
-        public List<Comment> GetAllComment()
+        public List<CommentFullDto> GetAllComment()
         {
-            return _db.Comments.ToList();
+            var re = _db.Comments.ToList();
+            return CreateDTOList(re);
         }
 
-        public int Count(int baseid)
+        public int CountAllComment()
         {
-            int count = _db.Comments.Where(c => c.Id == baseid).Count();
-            if (count == 0)
-            {
-                return 0;
-            }
-            return _db.Comments.Where(c => c.BaseId == baseid).Count() + 1;
+            return  _db.Comments.Count();
         }
         /// <summary>
-        /// ham de quy, lay ra list cac comment tu 1 id comment goc.
+        /// Tu id cua 1 comment dem tat ca so comment con
         /// </summary>
-        /// <param name="baseid"></param>
-        /// <param name="listcm"></param>
-        public void layHetComment(int baseid,ref List<Comment> listcm)
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public int CountFullComment(int id)
         {
+            int result = 0;
             var re = (from cm in _db.Comments
-                     where cm.BaseId == baseid
-                     select cm).ToList();
-            if (re.Count() > 0)
+                      where cm.BaseId == id
+                      select cm).ToList();
+            result = result + re.Count;
+            foreach (var item in re)
             {
-                //listcm.AddRange(re.ToList());
-                foreach (var item in re)
+                int countBuf = 0;
+                List<Comment> listBuf = new List<Comment>() { item };
+                while (countBuf < listBuf.Count)
                 {
-                    listcm.Add(item);
-                    layHetComment(item.Id, ref listcm);
-
+                    Comment cmBuf = listBuf[countBuf];
+                    var reBuf = (from cm in _db.Comments
+                                 where cm.BaseId == cmBuf.Id
+                                 select cm).ToList();
+                    result = result + reBuf.Count;
+                    listBuf.AddRange(reBuf);
+                    countBuf++;
                 }
             }
-        }
-        
-        public int CountComment(int baseid)
-        {
-            return (from cm in _db.Comments
-                    where cm.BaseId == baseid
-                    select cm).Count();
-        }
-        public List<Comment> GetChildComment(int baseid)
-        {
-            return (from cm in _db.Comments
-                    where cm.BaseId == baseid
-                    select cm).ToList();
+            return result;
         }
 
-        public List<Comment> GetAllCommentById(int baseid)
+        // Function phu
+        public CommentFullDto CreateDTO(Comment cur)
         {
-            int countcm;
-
-            List<Comment> listcm = new List<Comment>();
-            List<Comment> listresult = new List<Comment>();
-            
-            do
+            CommentFullDto tmp = new CommentFullDto();
+            tmp.Id = cur.Id;
+            tmp.PostId = cur.PostId;
+            tmp.BaseId = cur.BaseId;
+            tmp.Content = cur.Content;
+            tmp.DateCreated = cur.DateCreated;
+            return tmp;
+        }
+        public List<CommentFullDto> CreateDTOList(IList<Comment> listCmt)
+        {
+            if (listCmt == null) return null;
+            List<CommentFullDto> result = new List<CommentFullDto>(listCmt.Count);
+            foreach (Comment cmt in listCmt)
             {
-                countcm = CountComment(baseid);
-                listcm = GetChildComment(baseid);
-                listresult.AddRange(listcm);
-                foreach (var item in listcm)
-                { baseid = item.Id; }
-            } while (countcm > 0);
-            return listresult;
+                result.Add(CreateDTO(cmt));
+            }
+            return result;
+        }
+       
+        public void GetAllChildComment(int baseid, ref List<CommentFullDto> listresult)
+        {
+            var re = (from cm in _db.Comments
+                      where cm.BaseId == baseid
+                      select cm).ToList();
+            foreach (Comment item in re)
+            {
+                listresult.Add(getChildComment(item));
+            }
+        }
+        public CommentFullDto getChildComment(Comment cmm)
+        {
+            List<Comment> buf = new List<Comment> { cmm };
+            List<CommentFullDto> result = CreateDTOList(buf);
+            int count = 0;
+            while (count < buf.Count)
+            {
+                Comment bufCm = buf[count];
+                var re = (from cm in _db.Comments
+                          where cm.BaseId == bufCm.Id
+                          select cm).ToList();
+                if (re.Count() > 0)
+                {
+                    buf.AddRange(re);
+                    result[count].SubComments = CreateDTOList(re);
+                    result.AddRange(result[count].SubComments);
+                }
+                count++;
+            }
+            return result[0];
         }
     }
 }

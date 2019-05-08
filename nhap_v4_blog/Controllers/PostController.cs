@@ -55,5 +55,33 @@ namespace nhap_v4_blog.Controllers
         {
             _blogRepository.DeleteById(Id);
         }
+
+        [HttpGet]
+        [Route("GetComment/{PostId}")]
+        public List<Comment> GetComment(int PostId)
+        {
+            return _blogRepository.GetComment(PostId);
+        }
+
+        [HttpGet]
+        [Route("GetAllChildComment/{PostId}")]
+        public List<CommentFullDto> GetAllChildComment(int PostId)
+        {
+            return _blogRepository.GetAllChildComment(PostId);
+        }
+
+        [HttpGet]
+        [Route("Count")]
+        public int Count()
+        {
+            return _blogRepository.Count();
+        }
+
+        [HttpGet]
+        [Route("CountComment/{PostId}")]
+        public int CountComment(int PostId)
+        {
+            return _blogRepository.CountComment(PostId);
+        }
     }
 }

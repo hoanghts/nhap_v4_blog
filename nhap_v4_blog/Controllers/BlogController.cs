@@ -57,17 +57,17 @@ namespace nhap_v4_blog.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllPost/{Id}")]
-        public List<Post> GetAllPostByBlogId(int Id)
+        [Route("GetPost/{Id}")]
+        public List<Post> GetPost(int Id)
         {
-            return _blogRepository.GetAllByPerentId(Id);
+            return _blogRepository.GetPost(Id);
         }
 
         [HttpGet]
-        [Route("GetAll_Post/{blogId}")]
-        public Blog GetAllBlog_Post(int blogid)
+        [Route("GetTreePost/{blogid}")]
+        public Blog GetTreePost(int blogid)
         {
-            return _blogRepository.GetAllBLog_Post(blogid);
+            return _blogRepository.GetTreePost(blogid);
         }
 
     }

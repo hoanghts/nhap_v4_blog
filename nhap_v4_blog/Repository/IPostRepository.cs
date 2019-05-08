@@ -15,6 +15,9 @@ namespace nhap_v4_blog.Repository
         void UpdateById(int id, Post ob);
         void DeleteById(int id);
         //
-        List<Comment> GetAllComment(int PostId);
+        List<Comment> GetComment(int PostId);
+        List<CommentFullDto> GetAllChildComment(int PostId);
+        int Count();
+        int CountComment(int PostId);
     }
 }

@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace nhap_v4_blog.DTO
 {
-    public class CommentDto
+    public class CommentFullDto
     {
         public int Id { get; set; }
+        public int PostId { get; set; }
         public int? BaseId { get; set; }
         public string Content { get; set; }
-        public DateTime DateCreated { get; set; }
-
-        public int PostId { get; set; }
+        public DateTime DateCreated { get; set; }        
+        public IList<CommentFullDto> SubComments { get; set; }
     }
 }

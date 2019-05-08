@@ -9,14 +9,16 @@ namespace nhap_v4_blog.Repository
 {
     public interface ICommentRepository 
     {
-        List<CommentDto> GetAll();
-        CommentDto GetById(int id);
+        List<CommentFullDto> GetAllComment();
+        CommentFullDto GetById(int id);
         void Add(Comment ob);
         void UpdateById(int id, Comment ob);
         void DeleteById(int id);
-        //
-        List<Comment> GetAllCommentByBaseId(int baseid);
-        List<Comment> GetAllComment();
-        int Count(int baseid);
+        void DeleteAllChildComment(int commentid);
+        List<CommentFullDto> GetAllCommentByBaseId(int baseid);
+        int CountAllComment();
+        int CountFullComment(int id);
+
+        CommentFullDto CreateDTO(Comment cur);
     }
 }

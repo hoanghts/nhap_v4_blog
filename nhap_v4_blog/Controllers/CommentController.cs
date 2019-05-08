@@ -20,34 +20,34 @@ namespace nhap_v4_blog.Controllers
             _blogRepository = blogRepository;
         }
 
-        //
-        [HttpGet]
-        [Route("GetAll")]
-        public ActionResult<List<CommentDto>> GetAll()
-        {
-            return _blogRepository.GetAll();
-        }
 
         [HttpGet]
         [Route("GetAllComment")]
-        public List<Comment> GetAllComment()
+        public List<CommentFullDto> GetAllComment()
         {
             return _blogRepository.GetAllComment();
         }
 
         [HttpGet]
         [Route("GetById/{Id}")]
-        public CommentDto GetById(int Id)
+        public CommentFullDto GetById(int Id)
         {
             return _blogRepository.GetById(Id);
         }
 
 
         [HttpGet]
-        [Route("Count/{Id}")]
-        public int Count(int Id)
+        [Route("CountAllComment")]
+        public int CountAllComment()
         {
-            return _blogRepository.Count(Id);
+            return _blogRepository.CountAllComment();
+        }
+
+        [HttpGet]
+        [Route("CountFullComment/{Id}")]
+        public int CountFullComment(int Id)
+        {
+            return _blogRepository.CountFullComment(Id);
         }
 
         [HttpPost]
@@ -71,11 +71,18 @@ namespace nhap_v4_blog.Controllers
             _blogRepository.DeleteById(Id);
         }
 
+        [HttpDelete]
+        [Route("DeleteAllChildComment/{Id}")]
+        public void DeleteAllChildComment(int Id)
+        {
+            _blogRepository.DeleteAllChildComment(Id);
+        }
+
         // nhap
 
         [HttpGet]
-        [Route("nhapgetall/{Id}")]
-        public List<Comment> NhapGetAll(int Id)
+        [Route("GetFullComment/{Id}")]
+        public List<CommentFullDto> GetFullComment(int Id)
         {
             return _blogRepository.GetAllCommentByBaseId(Id);
         }

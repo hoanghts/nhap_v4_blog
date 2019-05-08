@@ -15,7 +15,9 @@ namespace nhap_v4_blog.Repository
         void UpdateById(int id, Blog ob);
         void DeleteById(int id);
         //
-        List<Post> GetAllByPerentId(int blogId);
-        Blog GetAllBLog_Post(int blogid);
+        List<Post> GetPost(int blogId);
+        Blog GetTreePost(int blogid);
+        int Count();
+        int CountPost(int BlogId);
     }
 }

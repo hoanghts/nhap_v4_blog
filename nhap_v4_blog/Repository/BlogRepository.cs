@@ -61,9 +61,7 @@ namespace nhap_v4_blog.Repository
             _db.SaveChanges();
         }
 
-        //
-
-        public List<Post> GetAllByPerentId(int blogId)
+        public List<Post> GetPost(int blogId)
         {
             var result = from p in _db.Posts
                          where p.BlogId == blogId
@@ -72,10 +70,18 @@ namespace nhap_v4_blog.Repository
             return result.ToList();
         }
 
-        public Blog GetAllBLog_Post(int blogid)
+        public Blog GetTreePost(int blogid)
         {
             return  _db.Blogs.Include(p => p.Post)
                             .FirstOrDefault(p => p.Id == blogid);
+        }
+        public int Count()
+        {
+            return _db.Blogs.Count();
+        }
+        public int CountPost(int BlogId)
+        {
+            return _db.Posts.Where(p =>)
         }
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using nhap_v4_blog;
 
 namespace nhap_v4_blog.Migrations
 {
     [DbContext(typeof(ClassDbContext))]
-    partial class ClassDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190509022908_add_propeties_model_account")]
+    partial class add_propeties_model_account
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,8 +46,6 @@ namespace nhap_v4_blog.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AccountId");
-
                     b.Property<DateTime>("DateCreated");
 
                     b.Property<string>("Name");
@@ -58,15 +58,13 @@ namespace nhap_v4_blog.Migrations
                         new
                         {
                             Id = 1,
-                            AccountId = 0,
-                            DateCreated = new DateTime(2019, 5, 9, 10, 15, 32, 510, DateTimeKind.Local).AddTicks(3823),
+                            DateCreated = new DateTime(2019, 5, 9, 9, 29, 8, 20, DateTimeKind.Local).AddTicks(9813),
                             Name = "Nhac Mr.Siro"
                         },
                         new
                         {
                             Id = 2,
-                            AccountId = 0,
-                            DateCreated = new DateTime(2019, 5, 9, 10, 15, 32, 510, DateTimeKind.Local).AddTicks(8480),
+                            DateCreated = new DateTime(2019, 5, 9, 9, 29, 8, 21, DateTimeKind.Local).AddTicks(4546),
                             Name = "Nhac Binh Minh Vu"
                         });
                 });
@@ -76,8 +74,6 @@ namespace nhap_v4_blog.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AccountId");
 
                     b.Property<int?>("BaseId");
 
@@ -99,17 +95,15 @@ namespace nhap_v4_blog.Migrations
                         new
                         {
                             Id = 1,
-                            AccountId = 0,
                             Content = "Bai hat kha hay",
-                            DateCreated = new DateTime(2019, 5, 9, 10, 15, 32, 511, DateTimeKind.Local).AddTicks(4808),
+                            DateCreated = new DateTime(2019, 5, 9, 9, 29, 8, 22, DateTimeKind.Local).AddTicks(1389),
                             PostId = 10
                         },
                         new
                         {
                             Id = 2,
-                            AccountId = 0,
                             Content = "Bai hat cung tam tam",
-                            DateCreated = new DateTime(2019, 5, 9, 10, 15, 32, 511, DateTimeKind.Local).AddTicks(5201),
+                            DateCreated = new DateTime(2019, 5, 9, 9, 29, 8, 22, DateTimeKind.Local).AddTicks(1786),
                             PostId = 11
                         });
                 });
@@ -119,8 +113,6 @@ namespace nhap_v4_blog.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AccountId");
 
                     b.Property<int>("BlogId");
 
@@ -140,19 +132,17 @@ namespace nhap_v4_blog.Migrations
                         new
                         {
                             Id = 10,
-                            AccountId = 0,
                             BlogId = 1,
                             Content = "Đừng khóc nếu không yêu anh em sẽ hạnh phúc Rất đau nhưng anh phải lạnh lùng Phải làm em tin rằng anh đã ko còn... như ngày xưa nữa Từ đó... dù cho bên ai cũng không hạnh phúc Nhận ra trong anh tình yêu ấy ko thể thay đổi Một ký ức đã từng rất đẹp, đã kết thúc khi em về bên ai Tìm đc nhau khó thế nào Điều gì đau lòng hơn mất em... ",
-                            DateCreated = new DateTime(2019, 5, 9, 10, 15, 32, 511, DateTimeKind.Local).AddTicks(1338),
+                            DateCreated = new DateTime(2019, 5, 9, 9, 29, 8, 21, DateTimeKind.Local).AddTicks(7415),
                             Title = "Cam nhan bai hat \"Tim duoc nhau kho the nao\" "
                         },
                         new
                         {
                             Id = 11,
-                            AccountId = 0,
                             BlogId = 1,
                             Content = "Chuyện hai chúng ta bây giờ khác rồi Thật lòng anh không muốn ai phải bối rốiSợ em nhìn thấy nên anh đành phải lẳng lặng đứng xaChuyện tình thay đổi nên bây giờ trở thành người thứ baTrách ai bây giờ ? Trách mình thôi!",
-                            DateCreated = new DateTime(2019, 5, 9, 10, 15, 32, 511, DateTimeKind.Local).AddTicks(2097),
+                            DateCreated = new DateTime(2019, 5, 9, 9, 29, 8, 21, DateTimeKind.Local).AddTicks(8161),
                             Title = "Cam nhan bai hat \"Buc tranh tu nuoc mat\" "
                         });
                 });

@@ -37,14 +37,14 @@ namespace nhap_v4_blog.Controllers
 
         [HttpPost]
         [Route("Add")]
-        public void AddBlog([FromBody] Post bg)
+        public void Add([FromBody] PostDto bg)
         {
             _blogRepository.Add(bg);
         }
 
         [HttpPut]
         [Route("Update/{Id}")]
-        public void UpdateBlog(int Id, [FromBody] Post bg)
+        public void Update(int Id, [FromBody] PostDto bg)
         {
             _blogRepository.UpdateById(Id, bg);
         }

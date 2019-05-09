@@ -4,26 +4,28 @@ using System.Linq;
 using System.Threading.Tasks;
 using nhap_v4_blog.Models;
 using nhap_v4_blog.DTO;
+using AutoMapper;
 
 namespace nhap_v4_blog.Repository
 {
     public class CommentRepository : ICommentRepository
     {
         ClassDbContext _db;
-        public CommentRepository(ClassDbContext db)
+        private readonly IMapper _mapper;
+        public CommentRepository(ClassDbContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
-        public void Add(Comment ob)
+        public void Add(CommentFullDto ob)
         {
-            _db.Comments.Add(ob);
+            _db.Comments.Add(_mapper.Map<Comment>(ob));
             _db.SaveChanges();
         }
-
         public void DeleteById(int id)
         {
             var comment = _db.Comments.Find(id);
-            _db.Comments.Remove(comment);
+            if (comment != null) _db.Comments.Remove(comment);
             _db.SaveChanges();
         }
 
@@ -56,26 +58,29 @@ namespace nhap_v4_blog.Repository
             }
             
         }
-        public List<CommentFullDto> GetAllCommentByBaseId(int baseid)
+        public List<CommentFullDto> GetFullComment(int baseid)
         {
             List<CommentFullDto> re = new List<CommentFullDto>();
             GetAllChildComment(baseid, ref re);
             return re;
-        }
+        } 
 
         public CommentFullDto GetById(int id)
         {
-            return  CreateDTO(_db.Comments.Find(id));
+            var cmdto = _mapper.Map<CommentFullDto>(_db.Comments.Find(id));
+            return cmdto;
         }
 
 
-        public void UpdateById(int id, Comment ob)
+        public void UpdateById(int id, CommentFullDto ob)
         {
+            var cm = _mapper.Map<Comment>(ob);
             var comment = _db.Comments.Find(id);
-            comment.Content = ob.Content;
-            comment.PostId = ob.PostId;
-            comment.DateCreated = ob.DateCreated;
-            comment.BaseId = ob.BaseId;
+            comment.AccountId = cm.AccountId;
+            comment.Content = cm.Content;
+            comment.PostId = cm.PostId;
+            comment.DateCreated = cm.DateCreated;
+            comment.BaseId = cm.BaseId;
             _db.SaveChanges();
         }
         //
@@ -120,36 +125,45 @@ namespace nhap_v4_blog.Repository
         }
 
         // Function phu
-        public CommentFullDto CreateDTO(Comment cur)
-        {
-            CommentFullDto tmp = new CommentFullDto();
-            tmp.Id = cur.Id;
-            tmp.PostId = cur.PostId;
-            tmp.BaseId = cur.BaseId;
-            tmp.Content = cur.Content;
-            tmp.DateCreated = cur.DateCreated;
-            return tmp;
-        }
+        //public CommentFullDto CreateDTO(Comment cur)
+        //{
+        //    CommentFullDto tmp = new CommentFullDto();
+        //    tmp.Id = cur.Id;
+        //    tmp.PostId = cur.PostId;
+        //    tmp.AccountId = cur.AccountId;
+        //    tmp.BaseId = cur.BaseId;
+        //    tmp.Content = cur.Content;
+        //    tmp.DateCreated = cur.DateCreated;
+        //    return tmp;
+        //}
         public List<CommentFullDto> CreateDTOList(IList<Comment> listCmt)
         {
             if (listCmt == null) return null;
             List<CommentFullDto> result = new List<CommentFullDto>(listCmt.Count);
             foreach (Comment cmt in listCmt)
             {
-                result.Add(CreateDTO(cmt));
+                result.Add(_mapper.Map<CommentFullDto>(cmt));
             }
             return result;
         }
        
         public void GetAllChildComment(int baseid, ref List<CommentFullDto> listresult)
         {
-            var re = (from cm in _db.Comments
-                      where cm.BaseId == baseid
-                      select cm).ToList();
-            foreach (Comment item in re)
+            List<CommentFullDto> buffer = new List<CommentFullDto>();
+            var parent = _db.Comments.Find(baseid);
+            if (parent != null)
             {
-                listresult.Add(getChildComment(item));
+                listresult.Add(_mapper.Map<CommentFullDto>(parent));
+                var re = (from cm in _db.Comments
+                          where cm.BaseId == baseid
+                          select cm).ToList();
+                foreach (Comment item in re)
+                {
+                    buffer.Add(getChildComment(item));
+                }
+                listresult[0].SubComments = buffer;
             }
+            
         }
         public CommentFullDto getChildComment(Comment cmm)
         {

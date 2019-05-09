@@ -37,14 +37,14 @@ namespace nhap_v4_blog.Controllers
 
         [HttpPost]
         [Route("Add")]
-        public void AddBlog([FromBody] Blog bg)
+        public void AddBlog([FromBody] BlogDto bg)
         {
              _blogRepository.Add(bg);
         }
 
         [HttpPut]
         [Route("Update/{Id}")]
-        public void UpdateBlog(int Id, [FromBody] Blog bg)
+        public void UpdateBlog(int Id, [FromBody] BlogDto bg)
         {
             _blogRepository.UpdateById(Id, bg);
         }
@@ -65,10 +65,23 @@ namespace nhap_v4_blog.Controllers
 
         [HttpGet]
         [Route("GetTreePost/{blogid}")]
-        public Blog GetTreePost(int blogid)
+        public BlogDto GetTreePost(int blogid)
         {
             return _blogRepository.GetTreePost(blogid);
         }
 
+        [HttpGet]
+        [Route("CountPost/{BlogId}")]
+        public int CountPost(int BlogId)
+        {
+            return _blogRepository.CountPost(BlogId);
+        }
+
+        [HttpGet]
+        [Route("Count")]
+        public int Count()
+        {
+            return _blogRepository.Count();
+        }
     }
 }

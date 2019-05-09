@@ -11,14 +11,13 @@ namespace nhap_v4_blog.Repository
     {
         List<CommentFullDto> GetAllComment();
         CommentFullDto GetById(int id);
-        void Add(Comment ob);
-        void UpdateById(int id, Comment ob);
+        void Add(CommentFullDto ob);
+        void UpdateById(int id, CommentFullDto ob);
         void DeleteById(int id);
         void DeleteAllChildComment(int commentid);
-        List<CommentFullDto> GetAllCommentByBaseId(int baseid);
+        List<CommentFullDto> GetFullComment(int baseid);
         int CountAllComment();
         int CountFullComment(int id);
 
-        CommentFullDto CreateDTO(Comment cur);
     }
 }

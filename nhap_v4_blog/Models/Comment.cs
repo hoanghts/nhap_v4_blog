@@ -15,10 +15,10 @@ namespace nhap_v4_blog.Models
         }
         public int Id { get; set; }
         public int? BaseId { get; set; }
+        public int PostId { get; set; }
+        public int AccountId { get; set; }
         public string Content { get; set; }
         public DateTime DateCreated { get; set; }
-
-        public int PostId { get; set; }
 
         [ForeignKey("BaseId")]
         public virtual ICollection<Comment> SubComments { get; set; }

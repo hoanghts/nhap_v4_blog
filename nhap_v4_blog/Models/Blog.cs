@@ -9,6 +9,7 @@ namespace nhap_v4_blog.Models
     public class Blog
     {
         public int Id { get; set; }
+        public int AccountId { get; set; }
         public string Name { get; set; }
         public DateTime DateCreated { get; set; }
         public ICollection<Post> Post { get; set; }

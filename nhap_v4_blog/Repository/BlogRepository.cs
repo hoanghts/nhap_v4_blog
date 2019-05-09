@@ -5,27 +5,40 @@ using System.Threading.Tasks;
 using nhap_v4_blog.Models;
 using Microsoft.EntityFrameworkCore;
 using nhap_v4_blog.DTO;
+using AutoMapper;
 
 namespace nhap_v4_blog.Repository
 {
     public class BlogRepository : IBlogRepository
     {
         ClassDbContext _db;
-        public BlogRepository(ClassDbContext db)
+        IPostRepository _postRe;
+        private readonly IMapper _mapper;
+        public BlogRepository(ClassDbContext db, IPostRepository postRe, IMapper mapper)
         {
             _db = db;
+            _postRe = postRe;
+            _mapper = mapper;
         }
 
-        public void Add(Blog ob)
+        public void Add(BlogDto ob)
         {
-            _db.Blogs.Add(ob);
+            _db.Blogs.Add(_mapper.Map<Blog>(ob));
             _db.SaveChanges();
         }
 
         public void DeleteById(int id)
         {
             var blog = _db.Blogs.Find(id);
-            _db.Blogs.Remove(blog);
+            if (blog != null) _db.Blogs.Remove(blog);
+            var post = _db.Posts.Where(p => p.BlogId == id).ToList();
+            if (post != null)
+            {
+                foreach (var item in post)
+                {
+                    _postRe.DeleteById(item.Id);
+                }
+            }
             _db.SaveChanges();
         }
 
@@ -35,6 +48,7 @@ namespace nhap_v4_blog.Repository
                     select new BlogDto
                     {
                         Id = b.Id,
+                        AccountId = b.AccountId,
                         Name = b.Name,
                         DateCreated = b.DateCreated
                     }).ToList();
@@ -47,17 +61,18 @@ namespace nhap_v4_blog.Repository
                     select new BlogDto
                     {
                         Id = b.Id,
+                        AccountId = b.AccountId,
                         Name = b.Name,
                         DateCreated = b.DateCreated
                     }).FirstOrDefault();
         }
 
-        public void UpdateById(int id, Blog ob)
+        public void UpdateById(int id, BlogDto ob)
         {
             var blog = _db.Blogs.Find(id);
+            blog.AccountId = ob.AccountId;
             blog.Name = ob.Name;
             blog.DateCreated = ob.DateCreated;
-            blog.Post = ob.Post;
             _db.SaveChanges();
         }
 
@@ -70,10 +85,11 @@ namespace nhap_v4_blog.Repository
             return result.ToList();
         }
 
-        public Blog GetTreePost(int blogid)
+        public BlogDto GetTreePost(int blogid)
         {
-            return  _db.Blogs.Include(p => p.Post)
+            var re =  _db.Blogs.Include(p => p.Post)
                             .FirstOrDefault(p => p.Id == blogid);
+            return _mapper.Map<BlogDto>(re);
         }
         public int Count()
         {
@@ -81,7 +97,7 @@ namespace nhap_v4_blog.Repository
         }
         public int CountPost(int BlogId)
         {
-            return _db.Posts.Where(p =>)
+            return _db.Posts.Where(p => p.BlogId == BlogId).Count();
         }
     }
 }

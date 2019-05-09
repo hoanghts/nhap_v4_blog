@@ -11,12 +11,12 @@ namespace nhap_v4_blog.Repository
     {
         List<BlogDto> GetAll();
         BlogDto GetById(int id);
-        void Add(Blog ob);
-        void UpdateById(int id, Blog ob);
+        void Add(BlogDto ob);
+        void UpdateById(int id, BlogDto ob);
         void DeleteById(int id);
         //
         List<Post> GetPost(int blogId);
-        Blog GetTreePost(int blogid);
+        BlogDto GetTreePost(int blogid);
         int Count();
         int CountPost(int BlogId);
     }

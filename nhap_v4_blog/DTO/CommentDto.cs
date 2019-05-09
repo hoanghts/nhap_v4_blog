@@ -9,6 +9,7 @@ namespace nhap_v4_blog.DTO
     {
         public int Id { get; set; }
         public int PostId { get; set; }
+        public int AccountId { get; set; }
         public int? BaseId { get; set; }
         public string Content { get; set; }
         public DateTime DateCreated { get; set; }        

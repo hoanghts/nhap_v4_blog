@@ -11,8 +11,8 @@ namespace nhap_v4_blog.Repository
     {
         List<PostDto> GetAll();
         PostDto GetById(int id);
-        void Add(Post ob);
-        void UpdateById(int id, Post ob);
+        void Add(PostDto ob);
+        void UpdateById(int id, PostDto ob);
         void DeleteById(int id);
         //
         List<Comment> GetComment(int PostId);

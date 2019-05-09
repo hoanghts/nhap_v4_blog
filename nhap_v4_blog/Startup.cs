@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using nhap_v4_blog.Repository;
 using nhap_v4_blog.Models;
 using Swashbuckle.AspNetCore.Swagger;
-
+using AutoMapper;
 namespace nhap_v4_blog
 {
     public class Startup
@@ -33,10 +33,18 @@ namespace nhap_v4_blog
             services.AddScoped<IBlogRepository, BlogRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            var configMapper = new MapperConfiguration(config =>
+               {
+                   config.AddProfile(new nhap_v4_blog.AutoMapper.MappingProfile());
+               });
+            IMapper mapper = configMapper.CreateMapper();
+            services.AddSingleton(mapper);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Nhap_API", Description = "Nhap_API_Blog_Post_Comment" });
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

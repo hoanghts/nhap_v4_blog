@@ -52,14 +52,14 @@ namespace nhap_v4_blog.Controllers
 
         [HttpPost]
         [Route("Add")]
-        public void AddBlog([FromBody] Comment bg)
+        public void Add([FromBody] CommentFullDto bg)
         {
             _blogRepository.Add(bg);
         }
 
         [HttpPut]
         [Route("Update/{Id}")]
-        public void UpdateBlog(int Id, [FromBody] Comment bg)
+        public void UpdateById(int Id, [FromBody] CommentFullDto bg)
         {
             _blogRepository.UpdateById(Id, bg);
         }
@@ -84,7 +84,7 @@ namespace nhap_v4_blog.Controllers
         [Route("GetFullComment/{Id}")]
         public List<CommentFullDto> GetFullComment(int Id)
         {
-            return _blogRepository.GetAllCommentByBaseId(Id);
+            return _blogRepository.GetFullComment(Id);
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using nhap_v4_blog.Repository;
 using nhap_v4_blog.Models;
 using nhap_v4_blog.DTO;
+using AutoMapper;
 
 namespace nhap_v4_blog.Repository
 {
@@ -12,23 +13,26 @@ namespace nhap_v4_blog.Repository
     {
         ClassDbContext _db;
         ICommentRepository _cmRe;
-        public PostRepository(ClassDbContext db, ICommentRepository cmRe)
+        private readonly IMapper _mapper;
+        public PostRepository(ClassDbContext db, ICommentRepository cmRe, IMapper mapper)
         {
             _db = db;
             _cmRe = cmRe;
+            _mapper = mapper;
         }
-        public void Add(Post ob)
+        public void Add(PostDto ob)
         {
-            _db.Posts.Add(ob);
+            _db.Posts.Add(_mapper.Map<Post>(ob));
             _db.SaveChanges();
         }
 
         public void DeleteById(int id)
         {
             var post = _db.Posts.Find(id);
-            _db.Posts.Remove(post);
+            if (post != null) _db.Posts.Remove(post);
+
             var comment = _db.Comments.Where(cm => cm.PostId == id).ToList();
-            _db.Comments.RemoveRange(comment);
+            if (comment != null) _db.Comments.RemoveRange(comment);
             _db.SaveChanges();
         }
 
@@ -38,6 +42,7 @@ namespace nhap_v4_blog.Repository
                     select new PostDto
                     {
                         Id = b.Id,
+                        AccountId = b.AccountId,
                         Title = b.Title,
                         Content = b.Content,
                         BlogId = b.BlogId,
@@ -61,8 +66,8 @@ namespace nhap_v4_blog.Repository
             int count = 0;
             foreach (var item in re)
             {
-                result.Add(_cmRe.CreateDTO(item));
-                buffer = _cmRe.GetAllCommentByBaseId(item.Id);
+                result.Add(_mapper.Map<CommentFullDto>(item));
+                buffer = _cmRe.GetFullComment(item.Id);
                 result[count].SubComments = buffer;
                 count++;
             }
@@ -76,6 +81,7 @@ namespace nhap_v4_blog.Repository
                   select new PostDto
                   {
                       Id = b.Id,
+                      AccountId = b.AccountId,
                       Title = b.Title,
                       Content = b.Content,
                       BlogId = b.BlogId,
@@ -83,14 +89,14 @@ namespace nhap_v4_blog.Repository
                   }).FirstOrDefault();
         }
 
-        public void UpdateById(int id, Post ob)
+        public void UpdateById(int id, PostDto ob)
         {
             var post = _db.Posts.Find(id);
+            post.AccountId = ob.AccountId;
             post.Title = ob.Title;
             post.Content = ob.Content;
             post.BlogId = ob.BlogId;
             post.DateCreated = ob.DateCreated;
-            post.Comments = ob.Comments;
             _db.SaveChanges();
         }
 

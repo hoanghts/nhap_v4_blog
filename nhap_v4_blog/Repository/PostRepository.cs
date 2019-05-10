@@ -26,59 +26,60 @@ namespace nhap_v4_blog.Repository
             _db.SaveChanges();
         }
 
-        public void DeleteById(int id)
+        public void Delete(int Id)
         {
-            var post = _db.Posts.Find(id);
+            var post = _db.Posts.Find(Id);
             if (post != null) _db.Posts.Remove(post);
 
-            var comment = _db.Comments.Where(cm => cm.PostId == id).ToList();
+            var comment = _db.Comments.Where(cm => cm.PostId == Id).ToList();
             if (comment != null) _db.Comments.RemoveRange(comment);
             _db.SaveChanges();
         }
 
-        public List<PostDto> GetAll()
-        {
-            return (from b in _db.Posts
-                    select new PostDto
-                    {
-                        Id = b.Id,
-                        AccountId = b.AccountId,
-                        Title = b.Title,
-                        Content = b.Content,
-                        BlogId = b.BlogId,
-                        DateCreated = b.DateCreated
-                    }).ToList();
-        }
+        //public List<PostDto> Get()
+        //{
+        //    return (from b in _db.Posts
+        //            select new PostDto
+        //            {
+        //                Id = b.Id,
+        //                AccountId = b.AccountId,
+        //                Title = b.Title,
+        //                Content = b.Content,
+        //                BlogId = b.BlogId,
+        //                DateCreated = b.DateCreated
+        //            }).ToList();
+        //}
 
-        public List<Comment> GetComment(int PostId)
+        public List<CommentDto> GetComment(int Id)
         {
-            return (from c in _db.Comments
-                    where (c.PostId == PostId && c.BaseId == null)
-                    select c).ToList();
-        }
-        public List<CommentFullDto> GetAllChildComment(int PostId)
-        {
-            List<CommentFullDto> result = new List<CommentFullDto>();
-            List<CommentFullDto> buffer = new List<CommentFullDto>();
             var re = (from c in _db.Comments
-                       where (c.PostId == PostId && c.BaseId == null)
-                       select c).ToList();
-            int count = 0;
-            foreach (var item in re)
-            {
-                result.Add(_mapper.Map<CommentFullDto>(item));
-                buffer = _cmRe.GetFullComment(item.Id);
-                result[count].SubComments = buffer;
-                count++;
-            }
-            return result;
+                    where (c.PostId == Id && c.BaseId == null)
+                    select c).ToList();
+            return _mapper.Map<List<CommentDto>>(re);
         }
+        //public List<CommentFullDto> GetAllChildComment(int PostId)
+        //{
+        //    List<CommentFullDto> result = new List<CommentFullDto>();
+        //    List<CommentFullDto> buffer = new List<CommentFullDto>();
+        //    var re = (from c in _db.Comments
+        //               where (c.PostId == PostId && c.BaseId == null)
+        //               select c).ToList();
+        //    int count = 0;
+        //    foreach (var item in re)
+        //    {
+        //        result.Add(_mapper.Map<CommentFullDto>(item));
+        //        buffer = _cmRe.GetFullComment(item.Id);
+        //        result[count].SubComments = buffer;
+        //        count++;
+        //    }
+        //    return result;
+        //}
 
-        public PostDto GetById(int id)
+        public PostDto Get(int Id)
         {
             return (from b in _db.Posts
-                  where b.Id == id
-                  select new PostDto
+                  where b.Id == Id
+                    select new PostDto
                   {
                       Id = b.Id,
                       AccountId = b.AccountId,
@@ -89,9 +90,9 @@ namespace nhap_v4_blog.Repository
                   }).FirstOrDefault();
         }
 
-        public void UpdateById(int id, PostDto ob)
+        public void Update(int Id, PostDto ob)
         {
-            var post = _db.Posts.Find(id);
+            var post = _db.Posts.Find(Id);
             post.AccountId = ob.AccountId;
             post.Title = ob.Title;
             post.Content = ob.Content;
@@ -105,9 +106,9 @@ namespace nhap_v4_blog.Repository
             return _db.Posts.Count();
         }
 
-        public int CountComment(int PostId)
+        public int CountComment(int Id)
         {
-            return _db.Comments.Where(p => p.PostId == PostId).Count();
+            return _db.Comments.Where(p => p.PostId == Id).Count();
         }
         //
     }

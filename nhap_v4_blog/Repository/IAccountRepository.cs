@@ -9,11 +9,11 @@ namespace nhap_v4_blog.Repository
 {
     public interface IAccountRepository
     {
-        List<AccountDto> GetAll();
-        AccountDto GetById(int id);
+        List<AccountDto> Get();
+        AccountDto Get(int id);
         void Add(AccountDto ob);
-        void UpdateById(int id, AccountDto ob);
-        void DeleteById(int id);
+        void Update(int id, AccountDto ob);
+        void Delete(int id);
         int Count();
         DetailAccountItem CountItem(int id);
     }

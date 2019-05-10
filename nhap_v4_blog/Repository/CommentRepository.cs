@@ -17,22 +17,18 @@ namespace nhap_v4_blog.Repository
             _db = db;
             _mapper = mapper;
         }
-        public void Add(CommentFullDto ob)
+        public void Add(CommentDto ob)
         {
             _db.Comments.Add(_mapper.Map<Comment>(ob));
             _db.SaveChanges();
         }
-        public void DeleteById(int id)
+        public void Delete(int Id)
         {
-            var comment = _db.Comments.Find(id);
-            if (comment != null) _db.Comments.Remove(comment);
-            _db.SaveChanges();
-        }
-
-        public void DeleteAllChildComment(int commentid)
-        {
+            //var comment = _db.Comments.Find(Id);
+            //if (comment != null) _db.Comments.Remove(comment);
+            //_db.SaveChanges();
             var re = (from cm in _db.Comments
-                      where cm.BaseId == commentid
+                      where cm.BaseId == Id
                       select cm).ToList();
             if (re.Count > 0)
             {
@@ -46,36 +42,35 @@ namespace nhap_v4_blog.Repository
                         var reBuf = (from cm in _db.Comments
                                      where cm.BaseId == cmBuf.Id
                                      select cm).ToList();
-                        
+
                         listBuf.AddRange(reBuf);
                         _db.Comments.Remove(cmBuf);
                         countBuf++;
                     }
                 }
-                var comment = _db.Comments.Find(commentid);
+                var comment = _db.Comments.Find(Id);
                 _db.Comments.Remove(comment);
                 _db.SaveChanges();
             }
-            
         }
-        public List<CommentFullDto> GetFullComment(int baseid)
+
+        public List<CommentFullDto> GetFullComment(int Id)
         {
             List<CommentFullDto> re = new List<CommentFullDto>();
-            GetAllChildComment(baseid, ref re);
+            GetAllChildComment(Id, ref re);
             return re;
         } 
 
-        public CommentFullDto GetById(int id)
+        public CommentDto Get(int Id)
         {
-            var cmdto = _mapper.Map<CommentFullDto>(_db.Comments.Find(id));
-            return cmdto;
+            return _mapper.Map<CommentDto>(_db.Comments.Find(Id));
         }
 
 
-        public void UpdateById(int id, CommentFullDto ob)
+        public void Update(int Id, CommentDto ob)
         {
             var cm = _mapper.Map<Comment>(ob);
-            var comment = _db.Comments.Find(id);
+            var comment = _db.Comments.Find(Id);
             comment.AccountId = cm.AccountId;
             comment.Content = cm.Content;
             comment.PostId = cm.PostId;
@@ -84,13 +79,13 @@ namespace nhap_v4_blog.Repository
             _db.SaveChanges();
         }
         //
-        public List<CommentFullDto> GetAllComment()
-        {
-            var re = _db.Comments.ToList();
-            return CreateDTOList(re);
-        }
+        //public List<CommentFullDto> GetAllComment()
+        //{
+        //    var re = _db.Comments.ToList();
+        //    return CreateDTOList(re);
+        //}
 
-        public int CountAllComment()
+        public int Count()
         {
             return  _db.Comments.Count();
         }
@@ -99,11 +94,11 @@ namespace nhap_v4_blog.Repository
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public int CountFullComment(int id)
+        public int CountFullComment(int Id)
         {
             int result = 0;
             var re = (from cm in _db.Comments
-                      where cm.BaseId == id
+                      where cm.BaseId == Id
                       select cm).ToList();
             result = result + re.Count;
             foreach (var item in re)
@@ -136,39 +131,32 @@ namespace nhap_v4_blog.Repository
         //    tmp.DateCreated = cur.DateCreated;
         //    return tmp;
         //}
-        public List<CommentFullDto> CreateDTOList(IList<Comment> listCmt)
-        {
-            if (listCmt == null) return null;
-            List<CommentFullDto> result = new List<CommentFullDto>(listCmt.Count);
-            foreach (Comment cmt in listCmt)
-            {
-                result.Add(_mapper.Map<CommentFullDto>(cmt));
-            }
-            return result;
-        }
+        //public List<CommentFullDto> CreateDTOList(IList<Comment> listCmt)
+        //{
+        //    if (listCmt == null) return null;
+        //    List<CommentFullDto> result = new List<CommentFullDto>(listCmt.Count);
+        //    foreach (Comment cmt in listCmt)
+        //    {
+        //        result.Add(_mapper.Map<CommentFullDto>(cmt));
+        //    }
+        //    return result;
+        //}
        
-        public void GetAllChildComment(int baseid, ref List<CommentFullDto> listresult)
+        public void GetAllChildComment(int Id, ref List<CommentFullDto> listresult)
         {
             List<CommentFullDto> buffer = new List<CommentFullDto>();
-            var parent = _db.Comments.Find(baseid);
-            if (parent != null)
-            {
-                listresult.Add(_mapper.Map<CommentFullDto>(parent));
                 var re = (from cm in _db.Comments
-                          where cm.BaseId == baseid
+                          where cm.BaseId == Id
                           select cm).ToList();
                 foreach (Comment item in re)
                 {
-                    buffer.Add(getChildComment(item));
+                    listresult.Add(getChildComment(item));
                 }
-                listresult[0].SubComments = buffer;
-            }
-            
         }
         public CommentFullDto getChildComment(Comment cmm)
         {
             List<Comment> buf = new List<Comment> { cmm };
-            List<CommentFullDto> result = CreateDTOList(buf);
+            List<CommentFullDto> result = _mapper.Map<List<CommentFullDto>>(buf);
             int count = 0;
             while (count < buf.Count)
             {
@@ -179,7 +167,7 @@ namespace nhap_v4_blog.Repository
                 if (re.Count() > 0)
                 {
                     buf.AddRange(re);
-                    result[count].SubComments = CreateDTOList(re);
+                    result[count].SubComments = _mapper.Map<List<CommentFullDto>>(re);
                     result.AddRange(result[count].SubComments);
                 }
                 count++;

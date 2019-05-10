@@ -9,14 +9,14 @@ namespace nhap_v4_blog.Repository
 {
     public interface IBlogRepository
     {
-        List<BlogDto> GetAll();
-        BlogDto GetById(int id);
-        void Add(BlogDto ob);
-        void UpdateById(int id, BlogDto ob);
-        void DeleteById(int id);
+        List<BlogDto> Get();
+        BlogDto Get(int Id);
+        void Add(BlogDto Id);
+        void Update(int Id, BlogDto ob);
+        void Delete(int Id);
         //
-        List<Post> GetPost(int blogId);
-        BlogDto GetTreePost(int blogid);
+        List<PostDto> GetPost(int BlogId);
+        //BlogFullDto GetFullPost(int BlogId);
         int Count();
         int CountPost(int BlogId);
     }

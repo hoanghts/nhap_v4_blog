@@ -27,22 +27,22 @@ namespace nhap_v4_blog.Repository
             _db.SaveChanges();
         }
 
-        public void DeleteById(int id)
+        public void Delete(int Id)
         {
-            var blog = _db.Blogs.Find(id);
+            var blog = _db.Blogs.Find(Id);
             if (blog != null) _db.Blogs.Remove(blog);
-            var post = _db.Posts.Where(p => p.BlogId == id).ToList();
+            var post = _db.Posts.Where(p => p.BlogId == Id).ToList();
             if (post != null)
             {
                 foreach (var item in post)
                 {
-                    _postRe.DeleteById(item.Id);
+                    _postRe.Delete(item.Id);
                 }
             }
             _db.SaveChanges();
         }
 
-        public List<BlogDto> GetAll()
+        public List<BlogDto> Get()
         {
             return (from b in _db.Blogs
                     select new BlogDto
@@ -54,43 +54,35 @@ namespace nhap_v4_blog.Repository
                     }).ToList();
         }
 
-        public BlogDto GetById(int id)
+        public BlogDto Get(int Id)
         {
-            return (from b in _db.Blogs
-                    where b.Id == id
-                    select new BlogDto
-                    {
-                        Id = b.Id,
-                        AccountId = b.AccountId,
-                        Name = b.Name,
-                        DateCreated = b.DateCreated
-                    }).FirstOrDefault();
+            return _mapper.Map<BlogDto>(_db.Blogs.Find(Id));
         }
 
-        public void UpdateById(int id, BlogDto ob)
+        public void Update(int Id, BlogDto ob)
         {
-            var blog = _db.Blogs.Find(id);
+            var blog = _db.Blogs.Find(Id);
             blog.AccountId = ob.AccountId;
             blog.Name = ob.Name;
             blog.DateCreated = ob.DateCreated;
             _db.SaveChanges();
         }
 
-        public List<Post> GetPost(int blogId)
+        public List<PostDto> GetPost(int BlogId)
         {
             var result = from p in _db.Posts
-                         where p.BlogId == blogId
+                         where p.BlogId == BlogId
                          select p;
 
-            return result.ToList();
+            return _mapper.Map<List<PostDto>>(result.ToList());
         }
 
-        public BlogDto GetTreePost(int blogid)
-        {
-            var re =  _db.Blogs.Include(p => p.Post)
-                            .FirstOrDefault(p => p.Id == blogid);
-            return _mapper.Map<BlogDto>(re);
-        }
+        //public BlogFullDto GetFullPost(int BlogId)
+        //{
+        //    var re =  _db.Blogs.Include(p => p.Post)
+        //                    .FirstOrDefault(p => p.Id == BlogId);
+        //    return _mapper.Map<BlogFullDto>(re);
+        //}
         public int Count()
         {
             return _db.Blogs.Count();

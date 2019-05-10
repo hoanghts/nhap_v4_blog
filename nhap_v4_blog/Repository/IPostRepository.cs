@@ -9,15 +9,15 @@ namespace nhap_v4_blog.Repository
 {
     public interface IPostRepository
     {
-        List<PostDto> GetAll();
-        PostDto GetById(int id);
+        //List<PostDto> Get();
+        PostDto Get(int Id);
         void Add(PostDto ob);
-        void UpdateById(int id, PostDto ob);
-        void DeleteById(int id);
+        void Update(int Id, PostDto ob);
+        void Delete(int Id);
         //
-        List<Comment> GetComment(int PostId);
-        List<CommentFullDto> GetAllChildComment(int PostId);
+        List<CommentDto> GetComment(int Id);
+        //List<CommentFullDto> GetAllChildComment(int PostId);
         int Count();
-        int CountComment(int PostId);
+        int CountComment(int Id);
     }
 }

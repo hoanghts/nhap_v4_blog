@@ -21,18 +21,18 @@ namespace nhap_v4_blog.Controllers
         }
 
         //
-        [HttpGet]
-        [Route("GetAll")]
-        public ActionResult<List<PostDto>> GetAll()
-        {
-            return _blogRepository.GetAll();
-        }
+        //[HttpGet]
+        //[Route("")]
+        //public ActionResult<List<PostDto>> Get()
+        //{
+        //    return _blogRepository.Get();
+        //}
 
         [HttpGet]
-        [Route("GetById/{Id}")]
-        public PostDto GetById(int Id)
+        [Route("{Id}")]
+        public PostDto Get(int Id)
         {
-            return _blogRepository.GetById(Id);
+            return _blogRepository.Get(Id);
         }
 
         [HttpPost]
@@ -43,32 +43,32 @@ namespace nhap_v4_blog.Controllers
         }
 
         [HttpPut]
-        [Route("Update/{Id}")]
+        [Route("{Id}")]
         public void Update(int Id, [FromBody] PostDto bg)
         {
-            _blogRepository.UpdateById(Id, bg);
+            _blogRepository.Update(Id, bg);
         }
 
         [HttpDelete]
-        [Route("Delete/{Id}")]
-        public void DeleteById(int Id)
+        [Route("{Id}")]
+        public void Delete(int Id)
         {
-            _blogRepository.DeleteById(Id);
+            _blogRepository.Delete(Id);
         }
 
         [HttpGet]
-        [Route("GetComment/{PostId}")]
-        public List<Comment> GetComment(int PostId)
+        [Route("GetComment/{Id}")]
+        public List<CommentDto> GetComment(int Id)
         {
-            return _blogRepository.GetComment(PostId);
+            return _blogRepository.GetComment(Id);
         }
 
-        [HttpGet]
-        [Route("GetAllChildComment/{PostId}")]
-        public List<CommentFullDto> GetAllChildComment(int PostId)
-        {
-            return _blogRepository.GetAllChildComment(PostId);
-        }
+        //[HttpGet]
+        //[Route("GetAllChildComment/{PostId}")]
+        //public List<CommentFullDto> GetAllChildComment(int PostId)
+        //{
+        //    return _blogRepository.GetAllChildComment(PostId);
+        //}
 
         [HttpGet]
         [Route("Count")]
@@ -78,10 +78,10 @@ namespace nhap_v4_blog.Controllers
         }
 
         [HttpGet]
-        [Route("CountComment/{PostId}")]
-        public int CountComment(int PostId)
+        [Route("CountComment/{Id}")]
+        public int CountComment(int Id)
         {
-            return _blogRepository.CountComment(PostId);
+            return _blogRepository.CountComment(Id);
         }
     }
 }

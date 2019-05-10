@@ -20,13 +20,13 @@ namespace nhap_v4_blog.Models
         Women = 2
     }
     public struct DetailAccountItem {
-        public numberDetail numberBlog { get; set; }
-        public numberDetail numberPost { get; set; }
-        public numberDetail numberComment { get; set; }
+        public Detail Blog { get; set; }
+        public Detail Post { get; set; }
+        public Detail Comment { get; set; }
     }
-    public struct numberDetail
+    public struct Detail
     {
-        public int number { get; set; }
-        public IList<string> Detail { get; set; }
+        public IList<int> Id { get; set; }
+        public IList<string> Content { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using nhap_v4_blog.DTO;
 using nhap_v4_blog.Models;
 
@@ -31,19 +32,19 @@ namespace nhap_v4_blog.Repository
         public DetailAccountItem CountItem(int id)
         {
             DetailAccountItem detail = new DetailAccountItem();
-            detail.numberBlog = getDetailBlogByAccount(id);
-            detail.numberPost = getDetailPostByAccount(id);
-            detail.numberComment = getDetailCommentByAccount(id);
+            detail.Blog = getDetailBlogByAccount(id);
+            detail.Post = getDetailPostByAccount(id);
+            detail.Comment = getDetailCommentByAccount(id);
             return detail;
         }
 
-        public void DeleteById(int id)
+        public void Delete(int id)
         {
             _db.Remove(_db.Accounts.Find(id));
             _db.SaveChanges();
         }
 
-        public List<AccountDto> GetAll()
+        public List<AccountDto> Get()
         {
             return (from a in _db.Accounts
                     select new AccountDto
@@ -56,7 +57,7 @@ namespace nhap_v4_blog.Repository
                     }).ToList();
         }
 
-        public AccountDto GetById(int id)
+        public AccountDto Get(int id)
         {
             return (from a in _db.Accounts
                    where a.Id == id
@@ -70,7 +71,7 @@ namespace nhap_v4_blog.Repository
                    }).FirstOrDefault();
         }
 
-        public void UpdateById(int id, AccountDto ac)
+        public void Update(int id, AccountDto ac)
         {
             var re = _db.Accounts.Find(id);
             re.Id = ac.Id;
@@ -82,46 +83,49 @@ namespace nhap_v4_blog.Repository
         }
 
         //
-        public numberDetail getDetailBlogByAccount(int AccountId)
+        public Detail getDetailBlogByAccount(int AccountId)
         {
-            numberDetail result = new numberDetail();
-            List<string> resultListId = new List<string>();
-
-            var buf = _db.Blogs.Where(b => b.AccountId == AccountId);
-            result.number = buf.Count();
-            foreach (var item in buf.ToList())
+            Detail result = new Detail();
+            List<int> resultListId = new List<int>();
+            List<string> resultListName = new List<string>();
+            var buf = _db.Blogs.Where(b => b.AccountId == AccountId).ToList();
+            foreach (var item in buf)
             {
-                resultListId.Add(item.Name);
+                resultListId.Add(item.Id);
+                resultListName.Add(item.Name);
             }
-            result.Detail = resultListId;
+            result.Id = resultListId;
+            result.Content = resultListName;
             return result;
         }
-        public numberDetail getDetailPostByAccount(int AccountId)
+        public Detail getDetailPostByAccount(int AccountId)
         {
-            numberDetail result = new numberDetail();
-            List<string> resultListId = new List<string>();
-
-            var buf = _db.Posts.Where(b => b.AccountId == AccountId);
-            result.number = buf.Count();
-            foreach (var item in buf.ToList())
+            Detail result = new Detail();
+            List<int> resultListId = new List<int>();
+            List<string> resultListName = new List<string>();
+            var buf = _db.Posts.Where(b => b.AccountId == AccountId).ToList();
+            foreach (var item in buf)
             {
-                resultListId.Add(item.Title);
+                resultListId.Add(item.Id);
+                resultListName.Add(item.Title);
             }
-            result.Detail = resultListId;
+            result.Id = resultListId;
+            result.Content = resultListName;
             return result;
         }
-        public numberDetail getDetailCommentByAccount(int AccountId)
+        public Detail getDetailCommentByAccount(int AccountId)
         {
-            numberDetail result = new numberDetail();
-            List<string> resultListId = new List<string>();
-
-            var buf = _db.Comments.Where(b => b.AccountId == AccountId);
-            result.number = buf.Count();
-            foreach (var item in buf.ToList())
+            Detail result = new Detail();
+            List<int> resultListId = new List<int>();
+            List<string> resultListName = new List<string>();
+            var buf = _db.Comments.Where(b => b.AccountId == AccountId).ToList();
+            foreach (var item in buf)
             {
-                resultListId.Add(item.Content);
+                resultListId.Add(item.Id);
+                resultListName.Add(item.Content);
             }
-            result.Detail = resultListId;
+            result.Id = resultListId;
+            result.Content = resultListName;
             return result;
         }
     }

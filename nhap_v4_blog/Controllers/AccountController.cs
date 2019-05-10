@@ -36,37 +36,37 @@ namespace nhap_v4_blog.Controllers
 
         [HttpGet]
         [Route("DetailAccountItem")]
-        public DetailAccountItem CountItem(int id)
+        public DetailAccountItem CountItem(int Id)
         {
-            return _re.CountItem(id);
+            return _re.CountItem(Id);
         }
 
         [HttpDelete]
-        [Route("DeleteById/{id}")]
-        public void DeleteById(int id)
+        [Route("{Id}")]
+        public void Delete(int Id)
         {
-            _re.DeleteById(id);
+            _re.Delete(Id);
         }
 
         [HttpGet]
-        [Route("GetAll")]
-        public List<AccountDto> GetAll()
+        [Route("")]
+        public List<AccountDto> Get()
         {
-            return _re.GetAll();
+            return _re.Get();
         }
 
         [HttpGet]
-        [Route("GetById/{id}")]
-        public AccountDto GetById(int id)
+        [Route("{Id}")]
+        public AccountDto Get(int Id)
         {
-            return _re.GetById(id);
+            return _re.Get(Id);
         }
 
         [HttpPut]
-        [Route("UpdateById/{id}")]
-        public void UpdateById(int id,[FromBody] AccountDto ob)
+        [Route("{Id}")]
+        public void Update(int Id, [FromBody] AccountDto ob)
         {
-            _re.UpdateById(id, ob);
+            _re.Update(Id, ob);
         }
     }
 }

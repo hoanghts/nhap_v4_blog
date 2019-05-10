@@ -22,17 +22,17 @@ namespace nhap_v4_blog.Controllers
 
         //
         [HttpGet]
-        [Route("GetAll")]
+        [Route("")]
         public ActionResult<List<BlogDto>> GetAll()
         {
-            return _blogRepository.GetAll();
+            return _blogRepository.Get();
         }
 
         [HttpGet]
-        [Route("GetById/{Id}")]
-        public BlogDto GetById(int Id)
+        [Route("{Id}")]
+        public BlogDto Get(int Id)
         {
-            return _blogRepository.GetById(Id);
+            return _blogRepository.Get(Id);
         }
 
         [HttpPost]
@@ -43,38 +43,38 @@ namespace nhap_v4_blog.Controllers
         }
 
         [HttpPut]
-        [Route("Update/{Id}")]
-        public void UpdateBlog(int Id, [FromBody] BlogDto bg)
+        [Route("{Id}")]
+        public void Update(int Id, [FromBody] BlogDto bg)
         {
-            _blogRepository.UpdateById(Id, bg);
+            _blogRepository.Update(Id, bg);
         }
 
         [HttpDelete]
-        [Route("Delete/{Id}")]
-        public void DeleteById(int Id)
+        [Route("{Id}")]
+        public void Delete(int Id)
         {
-            _blogRepository.DeleteById(Id);
+            _blogRepository.Delete(Id);
         }
 
         [HttpGet]
         [Route("GetPost/{Id}")]
-        public List<Post> GetPost(int Id)
+        public List<PostDto> GetPost(int Id)
         {
             return _blogRepository.GetPost(Id);
         }
 
-        [HttpGet]
-        [Route("GetTreePost/{blogid}")]
-        public BlogDto GetTreePost(int blogid)
-        {
-            return _blogRepository.GetTreePost(blogid);
-        }
+        //[HttpGet]
+        //[Route("GetFullPost/{BlogId}")]
+        //public BlogFullDto GetFullPost(int BlogId)
+        //{
+        //    return _blogRepository.GetFullPost(BlogId);
+        //}
 
         [HttpGet]
-        [Route("CountPost/{BlogId}")]
-        public int CountPost(int BlogId)
+        [Route("CountPost/{Id}")]
+        public int CountPost(int Id)
         {
-            return _blogRepository.CountPost(BlogId);
+            return _blogRepository.CountPost(Id);
         }
 
         [HttpGet]
